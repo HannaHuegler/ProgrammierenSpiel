@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style> </style>
+</head>
+
+<body>
+    <h1>Alter raten</h1>
+
+    <img src="../bilderpersonen/neildiamond.png" id="personimg" />
+    
+    <input type="button" value="Lade Bild" onclick="showImage()" /><br>
+    <input type="number" step="1.0" value="0.0" id="age" placeholder="Enter age"><br>
+    <button id="evaluate">Evaluate</button>
+
+    <script>
+        let CloudmersiveImageApiClient = require('cloudmersive-image-api-client');
+        let counter = 0;
+        let person = [
+            { name: "neildiamond.png", age : 79 },
+            { name: "kirstenbell.png", age : 39},
+            { name: "castaniavegia.png", age : 19},
+            { name: "meredithmonroe.png", age : 50},
+            { name: "mikevogel.png", age : 40}
+        ];
+
+        //eingabe alter
+
+        let defaultClient = CloudmersiveImageApiClient.ApiClient.instance;
+
+        // Configure API key authorization: Apikey
+        let Apikey = defaultClient.authentications['Apikey'];
+        Apikey.apiKey = "0c1c5e27-ec09-4da8-9da1-08f471384547"
+
+        let api = new CloudmersiveImageApiClient.FaceApi()
+
+        let imageBytes = fs.readFileSync('C:\\temp\\input.jpg');
+
+        let callback = function (error, data, response) {
+            if (error) {
+                console.error(error);
+                res.end('Error\n');
+            } else {
+                console.log('API called successfully.');
+
+                res.writeHead(200, {
+                    'Content-Type': 'image/png'
+                });
+                res.end(data, 'binary');
+
+                //res.end(data);
+            }
+        };
+
+        api.faceCropFirst(Buffer.from(imageBytes.buffer), callback);
+
+        let guessField = document.getElementById("age").addEventListener("click") 
+    
+        //anzeige API ergebnisse
+        //anzeige echte ergebnisse
+        //auswertung Punkte
+
+        //Funktionen
+        function showImage() {
+             //bild anzeigen
+            document.getElementById("personimg").src = "../bilderpersonen/"+person[counter].name;
+            counter++;
+        }
+
+        function checkGuess() {
+  let userGuess = Number(guessField.value);
+  if (guessCount === 1) {
+    guesses.textContent = 'Previous guesses: ';
+  }
+  guesses.textContent += userGuess + ' ';
+ 
+  if (userGuess === randomNumber) {
+    lastResult.textContent = 'Congratulations! You got it right!';
+    lastResult.style.backgroundColor = 'green';
+    lowOrHi.textContent = '';
+    setGameOver();
+  } else if (guessCount === 10) {
+    lastResult.textContent = '!!!GAME OVER!!!';
+    setGameOver();
+  } else {
+    lastResult.textContent = 'Wrong!';
+    lastResult.style.backgroundColor = 'red';
+    if(userGuess < randomNumber) {
+      lowOrHi.textContent = 'Last guess was too low!';
+    } else if(userGuess > randomNumber) {
+      lowOrHi.textContent = 'Last guess was too high!';
+    }
+  }
+ 
+  guessCount++;
+  guessField.value = '';
+  guessField.focus();
+}
+// Handles scoring
+let score = {
+            current: 0,
+            max: 100,
+
+            reset: function () {
+                this.current = 0;
+            },
+
+            update: function (newScore) {
+                if (!_(newScore).isUndefined())
+                    this.current += newScore; // Add to the existing score
+
+                if (this.current > this.max) // Ensure we don't go over the max score
+                    this.current = this.max;
+
+                // Temporarily put the scores into a nice two-digit format
+                this.current = uniformNumber(this.current);
+                this.max = uniformNumber(this.max);
+
+                // Updates the score content in the top-right of the screen
+                Template(
+                    "score",
+                    "template_score",
+                    this
+                );
+
+                // Reset the scores to proper integers again
+                this.current = parseInt(this.current);
+                this.max = parseInt(this.max);
+            }
+        };
+
+    </script>
+
+</body>
+
+</html>
