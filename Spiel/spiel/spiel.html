@@ -6,85 +6,121 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Ageguesser</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style> </style>
 </head>
 
 <body>
+    
     <h1>Ageguesser</h1>
 
-    <img src="../bilderpersonen/neildiamond.png" id="personimg" style="width: 800px;"/>
+    <img src="../bilderpersonen/neildiamond.png" id="personimg" style="width: 800px;" />
 
-    <input type="number" step="1.0" value="0.0" id="age" placeholder="Enter age"><br>
-    <output type="text" id="1" value=""  ></output>
+    <input type="number" step="1" value="0" id="age" placeholder="Enter age"><br>
+    <div id="textOutput">Hier kommt die Ausgabe</div>
     <button id="evaluate">Play against API</button>
+    <div id="trueage">True Age</div>
+    <div id="yourscore">Your Score</div>
+    <div id="apiscore">API Score</div>
+    <div id="score">Score</div>
     <input type="button" value="Lade neues Bild" onclick="showImage()" /><br>
-    <script src = "https://api.cloudmersive.com/image/face/detect-age"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-
         let counter = 0;
-        let person = [
-            {name: "neildiamond.png",age: 79},
-            {name: "kirstenbell.png", age: 39},
-            {name: "castaniavegia.png",age: 19},
-            {name: "meredithmonroe.png",age: 50},
-            {name: "mikevogel.png",age: 40}
+        let person = [{
+                name: "neildiamond.png",
+                age: 79
+            },
+            {
+                name: "meredithmonroe.png",
+                age: 50
+            },
+            {
+                name: "kirstenbell.png",
+                age: 39
+            },
+            {
+                name: "castaniavega.png",
+                age: 19
+            },
+            {
+                name: "mikevogel.png",
+                age: 40
+            }
         ];
 
-        //eingabe alter und anzeige echtes alter
-        document.getElementById("age").value.addEventListener("change", (calculate) => {
+        //eingabe und anzeige geratenes alter
+        document.getElementById("age").addEventListener("change", (calculate) => {
             let inputage = document.getElementById("age").value;
-             if (inputage >= 0 ){
-                let yourcount= person[counter].age - inputage;
-                let positiveyourcount = Math.abs(yourcount);
-                return (positiveyourcount);
-                document.getElementById("1").innerHTML ="I think he/she is" +positiveyourcount+ "years old";
-                }
-             else{
-                 document.getElementById("1").innerHTML = "Error age has to be positive"
-             }
-        });
-        
-        //anzeige api ergebnisse
-        document.getElementById("evaluate").addEventListener("click", function(event){
-        
-        var CloudmersiveImageApiClient = require('cloudmersive-image-api-client');
-        var defaultClient = CloudmersiveImageApiClient.ApiClient.instance;
-
-        // Configure API key authorization: Apikey
-        var Apikey = defaultClient.authentications['Apikey'];
-        Apikey.apiKey = 'YOUR API KEY';
-
-
-        var apiInstance = new CloudmersiveImageApiClient.FaceApi();
-
-        var imageFile = Buffer.from(fs.readFileSync("C:\\temp\\inputfile").buffer); // File | Image file to perform the operation on.  Common file formats such as PNG, JPEG are supported.
-
-
-        var callback = function(error, data, response) {
-            if (error) {
-            console.error(error);
+            if (inputage >= 0) {
+                document.getElementById("textOutput").innerHTML = "I think he/she is " + inputage +
+                    " years old";
             } else {
-             console.log('API called successfully. Returned data: ' + data);
+                document.getElementById("textOutput").innerHTML = "Error age has to be positive"
             }
-            };
-            apiInstance.faceDetectAge(imageFile, callback);
-        
-        
+        });
 
-         // scoring
-        let score = {
-        current: 0,
-        max: 100,};
+        //anzeige api ergebnisse
+        document.getElementById("evaluate").addEventListener("click", function (event) {
 
-        let ergebnis =
-        person[counter].age ;
+            let apiKey = '0c1c5e27-ec09-4da8-9da1-08f471384547';
+
+            let formData = new FormData();
+
+            axios.post('https://api.cloudmersive.com/image/face/detect-age',
+                    formData, //document.getElementById("personimg").src = "../bilderpersonen/" + person[counter].name,counter++, 
+                        {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'Apikey': apiKey,
+                            'Access-Control-Allow-Origin': 'http://safari.com',
+                        }
+                    }
+                ).then(function (result) {
+                    console.log('SUCCESS: ' + result);
+                })
+                .catch(function (error) {
+                    console.log('FAILURE: ' + error);
+                });
+
+
+
+            // Differenz berechnen
+
+            document.getElementById("trueage").innerHTML = "He/She is " + person[counter].age +
+                " years old";
+            let inputage = document.getElementById("age").value;
+            if (inputage >= 0) {
+                let yourcount = person[counter].age - inputage;
+                let positiveyourcount = Math.abs(yourcount);
+                document.getElementById("yourscore").innerHTML = "Your difference is " + positiveyourcount;
+
+                let apicount = person[counter].age - apiinput;
+                let positiveapicount = Math.abs(apicount);
+                document.getElementById("apiscore").innerHTML = "The API difference is " + positiveapicount;
+
+            } else {
+
+            //scoring
+            }
+                if (positiveyourcount = person[counter].age ) {
+                    let yourscore = 10
+                }
+                if (positiveyourcount, positiveapicount > personperson[counter].age) {
+                    let yourscore = 10 - positiveyourcount;
+                    let apiscore = 10 - positiveapicount;
+                }
+            document.getElementById("score").innerHTML = "Youre score is " + score ;
+
+        })
 
         //Funktionen
         function showImage() {
             //bild anzeigen
-             setTimeout(function(){document.getElementById("personimg").src = "../bilderpersonen/" + person[counter].name;
-            counter++;}, 3000);
+            setTimeout(function () {
+                document.getElementById("personimg").src = "../bilderpersonen/" + person[counter].name;
+                counter++
+            }, 300);
         };
-    
     </script>
 
 </body>
