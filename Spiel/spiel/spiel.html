@@ -86,15 +86,13 @@
                     }
                 ).then(function (result) {
                     console.log('SUCCESS: ' + JSON.stringify(result.data));
+                    let api = 'SUCCESS: ' + result.data;
+    
                 })
                 .catch(function (error) {
                     console.log('FAILURE: ' + error);
                 });
             })
-
-            
-
-
 
             // Differenz berechnen
 
@@ -106,6 +104,8 @@
                 let positiveyourcount = Math.abs(yourcount);
                 document.getElementById("yourscore").innerHTML = "Your difference is " + positiveyourcount;
 
+
+                let apiinput = api.age;
                 let apicount = person[counter].age - apiinput;
                 let positiveapicount = Math.abs(apicount);
                 document.getElementById("apiscore").innerHTML = "The API difference is " + positiveapicount;
