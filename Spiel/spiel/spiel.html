@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    
+
     <h1>Ageguesser</h1>
 
     <img src="../bilderpersonen/neildiamond.png" id="personimg" style="width: 800px;" />
@@ -71,68 +71,72 @@
             var myCanvas = document.getElementById('mycanvas');
             var ctx = myCanvas.getContext('2d');
             ctx.drawImage(myImage, 0, 0, 800, 800 * myImage.height / myImage.width);
-            
-            myCanvas.toBlob(function(blob) {
+
+            myCanvas.toBlob(function (blob) {
                 formData.append("image", blob, "image.png");
 
                 axios.post('https://api.cloudmersive.com/image/face/detect-age',
-                    formData, 
-                        {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            'Apikey': apiKey,
-                            'Access-Control-Allow-Origin': 'http://safari.com',
+                        formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                'Apikey': apiKey,
+                                'Access-Control-Allow-Origin': 'http://safari.com',
+                            }
                         }
-                    }
-                ).then(function (result) {
-                    console.log('SUCCESS: ' + JSON.stringify(result.data));
-                    let api = 'SUCCESS: ' + result.data;
-    
-                })
-                .catch(function (error) {
-                    console.log('FAILURE: ' + error);
-                });
-            })
-
-            // Differenz berechnen
-
-            document.getElementById("trueage").innerHTML = "He/She is " + person[counter].age +
-                " years old";
-            let inputage = document.getElementById("age").value;
-            if (inputage >= 0) {
-                let yourcount = person[counter].age - inputage;
-                let positiveyourcount = Math.abs(yourcount);
-                document.getElementById("yourscore").innerHTML = "Your difference is " + positiveyourcount;
+                    ).then(function (result) {
+                        console.log('SUCCESS: ' + JSON.stringify(result.data));
+                    })
+                    .catch(function (error) {
+                        console.log('FAILURE: ' + error);
+                    });
 
 
-                let apiinput = api.age;
-                let apicount = person[counter].age - apiinput;
-                let positiveapicount = Math.abs(apicount);
-                document.getElementById("apiscore").innerHTML = "The API difference is " + positiveapicount;
+                // Differenz berechnen
 
-            } else {
+                document.getElementById("trueage").innerHTML = "He/She is " + person[counter].age +
+                    " years old";
+                let inputage = document.getElementById("age").value;
+                if (inputage, apiinput >= 0) {
+                    let yourcount = person[counter].age - inputage;
+                    let positiveyourcount = Math.abs(yourcount);
+                    document.getElementById("yourscore").innerHTML = "Your difference is " +
+                        positiveyourcount;
 
-            //scoring
-            }
-                if (positiveyourcount = person[counter].age ) {
-                    let yourscore = 10
+
+                    let apiinput = api.age;
+                    let apicount = person[counter].age - apiinput;
+                    let positiveapicount = Math.abs(apicount);
+                    document.getElementById("apiscore").innerHTML = "The API difference is " + positiveapicount;
+
+                } else {
+
+                    //scoring
+                }
+                if (positiveyourcount, positiveapicount = person[counter].age) {
+                    let yourscore = 10;
+                    let apiscore = 10;
                 }
                 if (positiveyourcount, positiveapicount > personperson[counter].age) {
                     let yourscore = 10 - positiveyourcount;
                     let apiscore = 10 - positiveapicount;
                 }
-            document.getElementById("score").innerHTML = "Youre score is " + score ;
+                else{
+                        let yourscore = 0;
+                        let apiscore = 0;
+                }
+                let score = Math.abs(yourscore - apiscore)
 
+                document.getElementById("score").innerHTML = "Youre score is " + score;
+
+            })
         })
 
-        //Funktionen
+        //bild anzeigen
         function showImage() {
-            //bild anzeigen
-            setTimeout(function () {
                 document.getElementById("personimg").src = "../bilderpersonen/" + person[counter].name;
-                counter++
-            }, 300);
-        };
+                counter++;  
+            };
+            setTimeout(showImage, 300);
     </script>
 
 </body>
