@@ -25,11 +25,11 @@
     <div id="yourscore" class="yourscore">Your Score</div>
     <div id="apiscore" class="apiscore">API Score</div>
     <div id="score" class="score">Score</div>
-    <div id="totalscore" class="totalscore">Total Score</div>
     <input type="button" value="Lade neues Bild" onclick="showImage()" class="loadnew" /><br>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         let counter = 0;
+        //Array mit Bildern und zugehörigen Alter
         let person = [{
                 name: "startgame.png",
                 age: 0
@@ -57,7 +57,7 @@
             }
         ];
 
-        //eingabe und anzeige geratenes alter
+        //Eingabe und Anzeige geratenes alter
         document.getElementById("age").addEventListener("change", (calculate) => {
             let inputage = document.getElementById("age").value;
             if (inputage >= 0) {
@@ -68,24 +68,28 @@
             }
         });
 
-        //anzeige api ergebnisse
+        //Anzeige api Ergebnisse
         document.getElementById("evaluate").addEventListener("click", function (event) {
 
-            // timer 
-            let seconds = document.getElementById("countdown").textContent;
-            let countdown = setInterval(function () {
-                seconds--;
-                (seconds == 1) ? document.getElementById("plural").textContent = "": document
-                    .getElementById("plural").textContent = "s" + " until result";
-                document.getElementById("countdown").textContent = seconds;
-                if (seconds <= 0) clearInterval(countdown);
+            // Timer der nach klick auf evaluate 6Sekunden lang läuft 
+            var timeleft = 5;
+            var downloadTimer = setInterval(function () {
+                if (timeleft <= 0) {
+                    clearInterval(downloadTimer);
+                    document.getElementById("countdown").innerHTML = "Finished";
+                } else {
+                    document.getElementById("countdown").innerHTML = timeleft + " seconds remaining";
+                }
+                timeleft -= 1;
             }, 1000);
 
-
+            // API
+            //API Schlüssel
             let apiKey = '0c1c5e27-ec09-4da8-9da1-08f471384547';
 
             let formData = new FormData();
 
+            // Bild in Rohdaten umwandeln
             var myImage = document.getElementById('personimg');
             var myCanvas = document.getElementById('mycanvas');
             var ctx = myCanvas.getContext('2d');
@@ -102,65 +106,71 @@
                                 'Access-Control-Allow-Origin': 'http://safari.com',
                             }
                         }
+                        // hohlt sich hier das Alter
                     ).then(function (result) {
                         console.log('SUCCESS: ' + JSON.stringify(result.data));
+
                         apiinput = result.data.PeopleWithAge[0]["Age"];
                         console.log(apiinput);
-
-                        // Angabe Reales Alter
-                        document.getElementById("trueage").innerHTML = "He/She is " + person[
-                                counter].age +
-                            " years old";
-                        // Angabe API Alter
-                        document.getElementById("apiOutput").innerHTML =
-                            "The API thinks he/she is " + Math.round(apiinput) +
-                            " years old";
 
                         let inputage = document.getElementById("age").value;
 
                         //Differenzen berechnen und anzeigen
                         if (inputage, apiinput >= 0) {
                             let yourcount = person[counter].age - inputage;
-                            let positiveyourcount = Math.abs(yourcount);
                             document.getElementById("yourscore").innerHTML = "Your difference is " +
-                                positiveyourcount;
+                                yourcount;
 
 
                             let apicount = person[counter].age - Math.round(apiinput);
-                            let positiveapicount = Math.abs(apicount);
                             document.getElementById("apiscore").innerHTML =
                                 "The API difference is " +
-                                positiveapicount;
+                                apicount;
 
                             //scoring
-                            if (positiveyourcount, positiveapicount = person[counter].age) {
+                            if (yourcount, apicount == 0) {
                                 let yourscore = 10;
                                 let apiscore = 10;
-                            }
-                            if (positiveyourcount, positiveapicount > person[counter].age) {
-                                let yourscore = 10 - positiveyourcount;
-                                let apiscore = 10 - positiveapicount;
+                                if (yourscore >= apiscore) {
+                                    let score = yourscore - apiscore;
+                                } else {
+                                    let score = apiscore - yourscore;
+                                }
+                                
+                            } else if (yourcount, apicount <= 10) {
+                                let yourscore = 10 - yourcount;
+                                let apiscore = 10 - apicount;
+                                if (yourscore >= apiscore) {
+                                    let score = yourscore - apiscore;
+
+                                } 
                             } else {
-                                let yourscore = 0;
-                                let apiscore = 0;
+                                let score= 0;
+                                }
                             };
 
-                            if (yourscore > apiscore) {
-                                let score = yourscore - apiscore
-                            }
-                            else  {
-                                let score = apiscore - yourscore}
+                            document.getElementById("score").innerHTML = "Your score is " + score;
                             
 
-                            document.getElementById("score").innerHTML = "Your score is " + score;
+                            // Angabe Reales Alter
+                            document.getElementById("trueage").innerHTML = "He/She is " + person[
+                                    counter].age +
+                                " years old";
+
+                            // Angabe API Alter
+                            document.getElementById("apiOutput").innerHTML =
+                                "The API thinks he/she is " + Math.round(apiinput) +
+                                " years old";
 
                         }
-                    })
+                    )
+                
                     .catch(function (error) {
                         console.log('FAILURE: ' + error);
                     });
-            })
-        })
+            });
+        });
+
 
         //bild anzeigen
         function showImage() {

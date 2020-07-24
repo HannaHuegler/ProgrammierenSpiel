@@ -1,37 +1,60 @@
 # ProgrammierenSpiel
 Hanna Hügler Ageguesser
 
-Hier beschreibe ich, was dieses großartige Projekt tut. Weshalb es gebaut wurde. Welche Inspirationen und vorhandenen Quellen eingeflossen sind, und für wen es gemacht wurde. Ein Screenshot macht sich hier auch immer gut.
+In dem Spiel werden der Reihe nach Bilder angezeigt. Der Benutzer muss dann ein Alter raten und dieses eingeben. Dannach läuft die API darüber und rät ebenfalls. Es wird dann die Differenz zwischen geratenem und realem Alter angezeigt und dadurch ein Score ermittelt. 
+![Bildtext](doku/API.jpg "Bildtitel")
+Die API die ich verwendet habe ist die face detect-age von Cloudmersive.
+
 
 Usage / Benutzung
 
-Man benötigt einen Web-Server(http-serveer auf terminal).
-Hier beschreibe ich, wie man mein großartiges Projekt benutzen kann. Was ich tun muss um es zum Laufen zu bekommen (downloaden? welcher Browser? etc.). Wie ich es steuern kann. Was (noch) nicht richtig funktioniert und weshalb.
+Man benötigt einen Web-Server(http-server auf terminal). 
+- Benutzer muss das Alter eingeben diese wird ihm dann angezeigt
+- Dannach auf denn Play against API Button klicken
+- es wird ein Countdown angezeigt wie lang die API ungefähr noch braucht bis dass Ergebnis angezeigt wird
+- Das reale Alter, das geratene Alter der API, die Differenzen zum geratenen und realen und dem realen und geratenen der API wird angezeigt
+- Das Scoring wird angezeigt. Das funktioniert be mir allerdings noch nicht bei dem Score kommt immer  [object HTMLDivElement] heraus
+- Zuletzt muss der Benutzer auf Lade neuse Bild drücken um das nächste Bild zu sehen
+
 
 Structure / Aufbau
 
-Datensatz:
-Die Bilder sind mit dem zugehörigem Alter in einem Array abgespeichert
+Datensatz: Die Bilder sind mit dem zugehörigem Alter in einem Array abgespeichert 
+    name: Name der Bilddatei
+    age: Alter der Person
+inputage: Alter das der Benutzer geraten hat
+timeleft: Zeit für Countdown der herunter zählt
+myImage: zieht sich das jetzige Bild heraus
+myCanvas: Zeichenfläche für HTML 
+blob: Datensatz chunk, hält Daten
+apiinput: Alter das die API geraten hat
+yourcount: Differenz zwischen Benutzer geratenem Alter und realem Alter 
+apicount: Differenz zwischen API geratenem Alter und realem Alter
+yourscore: Score vom Benutzer im Vergleich zum relen Alter
+apiscore: Score von API im vergleich zum realen Alter
+score: Score der aus apiscore und yourscore berechnet wird mir wird aber immer:[object HTMLDivElement] angezeigt
 
-alcVol: der Alkoholgehalt (Property)
-amount: die Menge (Property, Standardwert: 500ml)
-Person: Eine Klasse um eine Person in Code abzubilden. Enthält typische Eigenschaften und Methoden von Menschen, um mit Bier zu interagieren:
+ctx.drawImage(myImage, 0, 0, 800, 800 * myImage.height / myImage.width): Bildausschnit über den API läuft(ganzes Bild)
 
-drinkBeer(beer): trinkt ein Bier, welches als Parameter übergeben wird und vom Typ / Klasse "Beer" sein muss (Funktion)
-isDrunk: gibt an ob eine Person betrunken ist (Property, Boolean)
-Zentrale Funktionen (die nicht zu Klassen gehören) folgen dem selben Muster, werden aber meist etwas ausführlicher beschrieben:
+apiinput = result.data.PeopleWithAge[0]["Age"] : zieht das Alter mit direkter Angabe aus dem Array damit dieses dann angezeigt werden kann
 
-haveParty(persons[], interval): Eine Funktion die ein Array von Personen entgegennimmt, und diese dann im angegebenen Intervall Bier trinken lässt. Nach jedem Durchlauf durch das Biertrinken (durch Aufruf von drinkBeer mit einem neu erzeugten Bier-Objekt) wird überprüft, ob die Anzahl der betrunkenen Personen größer 0 ist. Wenn dies eintritt, wird das Intervall bei jedem Durchlauf auf die doppelte Länge verlängert. Die Funktion endet in ihrer Ausführung dann wenn alle Personen isDrunk = true zurückgeben, oder wenn das Interval größer als 1 Stunde wird. Wird die Funktion mit nur einer Person im Array aufgerufen, wird eine Warnmeldung ausgegeben, um versehentliches Trinken alleine zu vermeiden.
 
-(Achtung: Hier werden nur Funktionen beschrieben, die eine zentrale Rolle einnehmen.)
 
-Nach der Beschreibung der elementaren Bestandteile wird aus der Vogelperspektive nochmals beschrieben, welche Gesamtzustände euer System durchlaufen kann. In diesem Fall würde der User zunächst 0 bis n Personen erzeugen, und diese mit haveParty() zum Bier trinken bringen. Dabei wird innerhalb von haveParty nacheinander für jede Person drinkBeer() aufgerufen, unter Benutzung von neuen Bier-Objekten. Nach Ende der Party muss das Programm neu gestartet werden um die Zustände zurückzusetzen.
 
-(Achtung, dieser Teil liest sich jetzt sehr ähnlich zur Funktionsbeschreibung von haveParty - das liegt daran dass es im Beispiel nur eine zentrale Funktion gibt. Ihr habt aber mehrere die zusammenspielen!).
+Der Benutzer rät ein Alter das ihm auch angezeigt wird. Dannach wird das Bild in die Rohdaten zerlegt diese werden dann zu einem Blob gemacht. Diese Daten werden in die API geschickt, die diese dann ausliest und unter anderem das von ihr bestimmte Alter ausgibt. Dieses wird dann mit apiinput festgelegt um damit weiter zu rechnen. 
+Zuerst wird die Differenz von dem echen und benutzer Alter berechnet mit: positiveyourcount wird die Differenz festgelegt und ausgegeben.
+Dann wird die Differenz von API und realem Alter berechnet und mit apipositiveyourcount festgelegt und ausgegeben.
+Scoring
+Wenn Benutzer oder API genau das richtige Alter erraten und die Differenz somit 0 beträgt, wird der eigene score auf 10 gesetzt und die beiden werden je nach dem voneinander abgezogen.
+
+Wenn Benutzer oder API eine höhere Differenz als Null haben wird die jeweilige Differenz von 10 abgezogen und so der Score festgelegt.
+
+Dannach kann auf Lade neues Bild geklickt werden, um zum nächsten Bild zu kommen, der Counter wird dann hochgezäht um so zum nächsten Bild im Array zu gelangen. Das ganze ist mit einer setTimeout Funktion versehen um damit das neuladen des Bildes zu verzögern.
+
+
 
 Future Work
 
-Was noch fehlt, und was die nächsten Schritte wären um es ggf. umzusetzen:
-
 - Erweitern des Datensatz um Blder mit dem zugehörigem Alter
 - Zeitlicher ablauf, so dass direkt beim Laden des Bilds API aufgerufen wird
+- Score jede Runde addieren
