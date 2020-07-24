@@ -1,0 +1,73 @@
+/*Hanna Hügler Ageguesser*/
+* {
+    background-color: #D8D8D8;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.age {
+    border-radius: 25px;
+    background-color: #A9A9A9;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+.textoutput{
+    padding: 6px;
+    border-width: 0px;
+}
+.evaluate{
+    border-radius: 25px;
+    background-color: #A9A9A9;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+.countdown{
+    padding: 6px;
+    border-width: 0px;
+}
+.trueage{
+    padding: 6px;
+    border-width: 0px;
+}
+.apioutput{
+    padding: 6px;
+    border-width: 0px;
+}
+.yourscore{
+    padding: 6px;
+    border-width: 0px;
+}
+.apiscore{
+    padding: 6px;
+    border-width: 0px;
+}
+.score{
+    padding: 6px;
+    border-width: 0px;
+}
+.totalscore{
+    padding: 6px;
+    border-width: 0px;
+}
+.loadnew{
+    border-radius: 25px;
+    background-color: #A9A9A9;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    position: absolute;
+    right: 150px;
+}

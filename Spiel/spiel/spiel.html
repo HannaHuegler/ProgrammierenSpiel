@@ -5,6 +5,7 @@
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Ageguesser</title>
+    <link rel="stylesheet" href="style.css">
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <style> </style>
 </head>
@@ -13,31 +14,38 @@
 
     <h1>Ageguesser</h1>
 
-    <img src="../bilderpersonen/neildiamond.png" id="personimg" style="width: 800px;" />
+    <img src="../bilderpersonen/startgame.png" id="personimg" style="width: 800px;" />
     <canvas width="800" height="800" id="mycanvas" style="display: none;"></canvas>
-
-    <input type="number" step="1" value="0" id="age" placeholder="Enter age"><br>
-    <div id="textOutput">Hier kommt die Ausgabe</div>
-    <button id="evaluate">Play against API</button>
-    <div id="trueage">True Age</div>
-    <div id="yourscore">Your Score</div>
-    <div id="apiscore">API Score</div>
-    <div id="score">Score</div>
-    <input type="button" value="Lade neues Bild" onclick="showImage()" /><br>
+    <input type="number" step="1" value="0" id="age" placeholder="Enter age" class="age"><br>
+    <div id="textOutput" class="textoutput">Hier kommt die Ausgabe</div>
+    <button id="evaluate" class="evaluate">Play against API</button>
+    <span id="countdown" class="countdown">6</span> second<span id="plural">s</span>
+    <div id="trueage" class="trueage">True Age</div>
+    <div id="apiOutput" class="apioutput">API Age</div>
+    <div id="yourscore" class="yourscore">Your Score</div>
+    <div id="apiscore" class="apiscore">API Score</div>
+    <div id="score" class="score">Score</div>
+    <div id="totalscore" class="totalscore">Total Score</div>
+    <input type="button" value="Lade neues Bild" onclick="showImage()" class="loadnew" /><br>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         let counter = 0;
         let person = [{
+                name: "startgame.png",
+                age: 0
+            },
+            {
                 name: "neildiamond.png",
                 age: 79
             },
             {
-                name: "meredithmonroe.png",
-                age: 50
-            },
-            {
                 name: "kirstenbell.png",
                 age: 39
+            },
+
+            {
+                name: "meredithmonroe.png",
+                age: 50
             },
             {
                 name: "castaniavega.png",
@@ -63,6 +71,17 @@
         //anzeige api ergebnisse
         document.getElementById("evaluate").addEventListener("click", function (event) {
 
+            // timer 
+            let seconds = document.getElementById("countdown").textContent;
+            let countdown = setInterval(function () {
+                seconds--;
+                (seconds == 1) ? document.getElementById("plural").textContent = "": document
+                    .getElementById("plural").textContent = "s" + " until result";
+                document.getElementById("countdown").textContent = seconds;
+                if (seconds <= 0) clearInterval(countdown);
+            }, 1000);
+
+
             let apiKey = '0c1c5e27-ec09-4da8-9da1-08f471384547';
 
             let formData = new FormData();
@@ -85,58 +104,70 @@
                         }
                     ).then(function (result) {
                         console.log('SUCCESS: ' + JSON.stringify(result.data));
+                        apiinput = result.data.PeopleWithAge[0]["Age"];
+                        console.log(apiinput);
+
+                        // Angabe Reales Alter
+                        document.getElementById("trueage").innerHTML = "He/She is " + person[
+                                counter].age +
+                            " years old";
+                        // Angabe API Alter
+                        document.getElementById("apiOutput").innerHTML =
+                            "The API thinks he/she is " + Math.round(apiinput) +
+                            " years old";
+
+                        let inputage = document.getElementById("age").value;
+
+                        //Differenzen berechnen und anzeigen
+                        if (inputage, apiinput >= 0) {
+                            let yourcount = person[counter].age - inputage;
+                            let positiveyourcount = Math.abs(yourcount);
+                            document.getElementById("yourscore").innerHTML = "Your difference is " +
+                                positiveyourcount;
+
+
+                            let apicount = person[counter].age - Math.round(apiinput);
+                            let positiveapicount = Math.abs(apicount);
+                            document.getElementById("apiscore").innerHTML =
+                                "The API difference is " +
+                                positiveapicount;
+
+                            //scoring
+                            if (positiveyourcount, positiveapicount = person[counter].age) {
+                                let yourscore = 10;
+                                let apiscore = 10;
+                            }
+                            if (positiveyourcount, positiveapicount > person[counter].age) {
+                                let yourscore = 10 - positiveyourcount;
+                                let apiscore = 10 - positiveapicount;
+                            } else {
+                                let yourscore = 0;
+                                let apiscore = 0;
+                            };
+
+                            if (yourscore > apiscore) {
+                                let score = yourscore - apiscore
+                            }
+                            else  {
+                                let score = apiscore - yourscore}
+                            
+
+                            document.getElementById("score").innerHTML = "Your score is " + score;
+
+                        }
                     })
                     .catch(function (error) {
                         console.log('FAILURE: ' + error);
                     });
-
-
-                // Differenz berechnen
-
-                document.getElementById("trueage").innerHTML = "He/She is " + person[counter].age +
-                    " years old";
-                let inputage = document.getElementById("age").value;
-                if (inputage, apiinput >= 0) {
-                    let yourcount = person[counter].age - inputage;
-                    let positiveyourcount = Math.abs(yourcount);
-                    document.getElementById("yourscore").innerHTML = "Your difference is " +
-                        positiveyourcount;
-
-
-                    let apiinput = api.age;
-                    let apicount = person[counter].age - apiinput;
-                    let positiveapicount = Math.abs(apicount);
-                    document.getElementById("apiscore").innerHTML = "The API difference is " + positiveapicount;
-
-                } else {
-
-                    //scoring
-                }
-                if (positiveyourcount, positiveapicount = person[counter].age) {
-                    let yourscore = 10;
-                    let apiscore = 10;
-                }
-                if (positiveyourcount, positiveapicount > personperson[counter].age) {
-                    let yourscore = 10 - positiveyourcount;
-                    let apiscore = 10 - positiveapicount;
-                }
-                else{
-                        let yourscore = 0;
-                        let apiscore = 0;
-                }
-                let score = Math.abs(yourscore - apiscore)
-
-                document.getElementById("score").innerHTML = "Youre score is " + score;
-
             })
         })
 
         //bild anzeigen
         function showImage() {
-                document.getElementById("personimg").src = "../bilderpersonen/" + person[counter].name;
-                counter++;  
-            };
-            setTimeout(showImage, 300);
+            counter++;
+            document.getElementById("personimg").src = "../bilderpersonen/" + person[counter].name;
+        };
+        setTimeout(showImage, 300);
     </script>
 
 </body>
